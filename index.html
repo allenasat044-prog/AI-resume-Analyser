@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Resume Analyzer</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>AI Resume Analyzer</h1>
+
+<div id="drop-area">
+    Drag & Drop Resume Here
+</div>
+
+<pre id="output"></pre>
+
+<script>
+const dropArea = document.getElementById("drop-area");
+
+dropArea.addEventListener("dragover", e => {
+    e.preventDefault();
+    dropArea.style.background = "#eee";
+});
+
+dropArea.addEventListener("dragleave", () => {
+    dropArea.style.background = "#fff";
+});
+
+dropArea.addEventListener("drop", async e => {
+    e.preventDefault();
+    dropArea.style.background = "#fff";
+
+    const file = e.dataTransfer.files[0];
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("/upload", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await response.json();
+    document.getElementById("output").innerText = data.analysis;
+});
+</script>
+
+</body>
+</html>
